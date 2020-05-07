@@ -1,0 +1,9 @@
+# vscode
+*.code-workspace
+*/.vscode
+
+# basic
+*/node_modules/
+
+# project
+RunEarth
