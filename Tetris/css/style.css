@@ -1,6 +1,7 @@
 * {
   padding: 0;
   margin: 0;
+  font-size: 20px;
 }
 
 html,
@@ -30,19 +31,94 @@ body,
   height: 40px;
   position: absolute;
   background-color: aliceblue;
-  border: black 1px solid;
+  border: gray 1px solid;
 }
 .sleep {
   width: 40px;
   height: 40px;
   position: absolute;
   background-color: gray;
-  border: black 1px solid;
+  box-shadow: inset 3px 3px 10px white;
+  border: gray 1px solid;
 }
 .alive {
   width: 40px;
   height: 40px;
   position: absolute;
-  background-color: greenyellow;
-  border: black 1px solid;
+  background-color: red;
+  box-shadow: inset 3px 3px 10px white;
+  border: gray 1px solid;
+}
+
+.gameinfo {
+  position: absolute;
+  left: calc((11) * 40px);
+  top: 40px;
+  width: 160px;
+  height: calc((12) * 40px);
+  /* border: black 1px solid; */
+  text-align: center;
+}
+#icon {
+  width: 160px;
+  height: 80px;
+  background: blanchedalmond;
+  text-align: center;
+}
+
+.score,
+.time {
+  position: relative;
+  text-align: center;
+  width: calc(100% - 8px);
+  height: 40px;
+  line-height: 40px;
+  margin: 4px;
+  border-bottom: solid 1px black;
+  /* box-shadow:  1px 1px 3px black; */
+}
+.time {
+  margin-top: 80px;
+}
+.s1 {
+  width: auto;
+  left: 0;
+  height: 40px;
+  position: absolute;
+}
+#score,
+#maxscore,
+#time {
+  right: 0;
+  height: 40px;
+  position: absolute;
+}
+
+#restart {
+  margin: 10px auto;
+  margin-top: 60px;
+  width: 120px;
+  height: 40px;
+  border: yellow 1px solid;
+  background-color: yellowgreen;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1em;
+  color: white;
+  line-height: 40px;
+  box-shadow:  3px 3px 10px black;
+}
+#pause {
+  margin: 10px auto;
+  margin-top: 20px;
+  width: 120px;
+  height: 40px;
+  border: red 1px solid;
+  background-color: brown;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1em;
+  color: white;
+  line-height: 40px;
+  box-shadow:  3px 3px 10px black;
 }
