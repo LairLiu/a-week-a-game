@@ -1,3 +1,5 @@
+import { TYPE, SQUARES } from "./StaticValue";
+
 class Square {
   static defaultSquare: number[][] =
     [
@@ -7,47 +9,52 @@ class Square {
       [0, 1, 0, 0]
     ];
 
-
-  origin = { x: 0, y: 0 };
+  origin = { x: 0, y: 3 };
   data = Square.defaultSquare;
-  constructor() { };
+  datas: number[][][] = [];
+  index: number = 0;
+  constructor() {
+    let random = Math.floor(Math.random() * SQUARES.length);
+    this.datas = SQUARES[random];
+
+    this.index = Math.floor(Math.random() * this.datas.length);
+    this.data = this.datas[this.index];
+  };
+
+
+  // ******************************
+  // 合法性检测
+  // ******************************
 
   // 判断移动是否合法
-  isValid(test: { x: number, y: number }, data: number[][], sceneData: number[][]): boolean {
+  isValid(pos: { x: number, y: number }, data: number[][], sceneData: number[][]): boolean {
     // 检查方块上的点
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < data[i].length; j++) {
-        if (data[i][j] != 0) {
-          if (!this.checkPoint(test, i, j, sceneData)) { console.log("-----222"); return false; }
+        if (data[i][j] != TYPE.none) {
+          if (!this.checkPoint(pos, i, j, sceneData)) { return false; }
         }
       }
     }
     return true;
   }
-
   // 检查单个点
-  checkPoint(test: { x: number, y: number }, i: number, j: number, sceneData: number[][]): boolean {
-    // console.log(sceneData.length, i + test.x, i, test.x, "----")
-    // console.log(sceneData[0].length, j + test.y > sceneData[0].length, j, test.y)
-    // console.log("下边界", test.x + i > sceneData.length);
-    // console.log("上边界", test.x + i < 0);
-    console.log("右边界", i, j, test.y + j > sceneData[0].length);
-    // console.log("左边界", test.y + j < 0);
-    // console.log("该位置存在方块", sceneData[test.x + i][test.y + j] === 2);
-
-    if (
-      test.x + i > sceneData.length               //下边界
-      || test.x + i < 0                           //上边界
-      || test.y + j > sceneData[0].length         //右边界
-      || test.y + j < 0                           //左边界
-      || sceneData[test.x + i][test.y + j] === 2  //该位置存在方块
-    ) { console.log("-----"); return false }
-    return true;
+  checkPoint(pos: { x: number, y: number }, i: number, j: number, sceneData: number[][]): boolean {
+    return (
+      pos.x + i >= sceneData.length                       //下边界
+      // || pos.x + i < 0                                    //上边界
+      || pos.y + j >= sceneData[0].length                 //右边界
+      || pos.y + j < 0                                    //左边界
+      || sceneData[pos.x + i][pos.y + j] === TYPE.sleep   //该位置存在方块
+    ) ? false : true;
   }
 
+
+  // ******************************
+  // 移动控制
+  // ******************************
   canRight(sceneData: number[][]) {
     let test = { x: this.origin.x, y: this.origin.y + 1 };
-
     return this.isValid(test, this.data, sceneData)
   }
   right() {
@@ -56,21 +63,53 @@ class Square {
 
   canLeft(sceneData: number[][]) {
     let test = { x: this.origin.x, y: this.origin.y - 1 };
-
     return this.isValid(test, this.data, sceneData)
   }
   left() {
     this.origin.y -= 1;
   }
 
+  canDown(sceneData: number[][]) {
+    let test = { x: this.origin.x + 1, y: this.origin.y };
+    return this.isValid(test, this.data, sceneData)
+  }
   down() {
     this.origin.x += 1;
+  }
+
+  // for debug
+  canUP(sceneData: number[][]) {
+    let test = { x: this.origin.x - 1, y: this.origin.y };
+    return this.isValid(test, this.data, sceneData)
   }
   up() {
     this.origin.x -= 1;
   }
-  rotate() {
 
+  canRotate(sceneData: number[][]) {
+    let index = this.index + 1 >= this.datas.length ? 0 : this.index + 1;
+    let data = this.datas[index];
+    return this.isValid(this.origin, data, sceneData);
+  }
+  rotate() {
+    this.index = this.index + 1 >= this.datas.length ? 0 : this.index + 1;
+    this.data = this.datas[this.index];
+  }
+
+
+  // ******************************
+  // 改变状态
+  // ******************************
+  sleep(sceneData: number[][]) {
+    let { x, y } = this.origin;
+    for (let i = 0; i < this.data.length; i++) {
+      for (let j = 0; j < this.data[i].length; j++) {
+        if (this.checkPoint(this.origin, i, j, sceneData)) {
+          if (this.data[i][j] === TYPE.alive)
+            sceneData[x + i][y + j] = TYPE.sleep;
+        }
+      }
+    }
   }
 }
 export default Square;
